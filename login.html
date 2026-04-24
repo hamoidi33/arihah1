@@ -3,44 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>⛧ AUTH ⛧</title>
+    <title>⛧ KURABI_AUTH ⛧</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{background:linear-gradient(135deg,#0a0f1e,#0d1225);font-family:'Courier New',monospace;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-        .login-card{background:rgba(10,10,10,.95);border:2px solid #0f0;border-radius:24px;padding:40px;max-width:400px;width:100%;box-shadow:0 0 40px rgba(0,255,65,.2)}
-        .login-title{text-align:center;color:#0f0;font-size:2rem;margin-bottom:20px;text-shadow:0 0 10px #0f0}
-        .login-title span{color:#f04}
-        .lang-selector{display:flex;justify-content:center;gap:15px;margin-bottom:30px}
-        .lang-btn{background:0 0;border:1px solid #0f0;color:#0f0;padding:5px 20px;cursor:pointer;border-radius:20px}
-        .lang-btn.active{background:#0f0;color:#000}
-        .input-group input{width:100%;background:#1f1f1f;border:1px solid #0f0;color:#0f0;padding:14px 18px;font-family:monospace;border-radius:12px;margin-bottom:15px}
-        .login-btn{width:100%;background:#0f0;color:#000;border:none;padding:14px;font-weight:bold;cursor:pointer;border-radius:40px;font-size:1rem}
-        .register-link{text-align:center;margin-top:25px;color:#888}
-        .register-link a{color:#f04;cursor:pointer}
-        .error-msg{color:#f04;text-align:center;margin-top:15px;font-size:.75rem}
-        .info-text{color:#0f0;text-align:center;margin-top:15px;font-size:.7rem}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #0d1225 100%);
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-container { max-width: 400px; width: 100%; }
+        .login-card {
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid #00ff41;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+        }
+        .login-title {
+            text-align: center;
+            color: #00ff41;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        .login-title span { color: #ff0040; }
+        .lang-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .lang-btn {
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 5px 20px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-family: monospace;
+        }
+        .lang-btn.active { background: #00ff41; color: #000; }
+        .input-group { margin-bottom: 20px; }
+        .input-group input {
+            width: 100%;
+            background: #1f1f1f;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 14px 18px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-radius: 12px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .checkbox-group label { color: #00ff41; font-size: 0.8rem; cursor: pointer; }
+        .login-btn {
+            width: 100%;
+            background: #00ff41;
+            color: #000;
+            border: none;
+            padding: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 40px;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+        .login-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px #00ff41; }
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+        .register-link a { color: #ff0040; text-decoration: none; cursor: pointer; }
+        .error-msg { color: #ff0040; text-align: center; margin-top: 15px; font-size: 0.75rem; }
+        .info-text { color: #00ff41; text-align: center; margin-top: 15px; font-size: 0.7rem; }
     </style>
 </head>
 <body>
-<div class="login-card">
-    <div class="login-title">⛧ <span>KURABI</span>_AUTH ⛧</div>
-    <div class="lang-selector">
-        <button class="lang-btn active" data-lang="en">🇬🇧 EN</button>
-        <button class="lang-btn" data-lang="ar">🇸🇦 AR</button>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-title">⛧ <span>KURABI</span>_AUTH ⛧</div>
+        <div class="lang-selector">
+            <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="ar">🇸🇦 العربية</button>
+        </div>
+        <div class="input-group"><input type="email" id="email" placeholder="EMAIL"></div>
+        <div class="input-group"><input type="password" id="password" placeholder="PASSWORD"></div>
+        <div class="checkbox-group"><input type="checkbox" id="rememberMe"><label id="rememberLabel">Remember Me</label></div>
+        <button class="login-btn" id="loginBtn">⟳ LOGIN</button>
+        <div class="register-link"><span id="registerText">DON'T HAVE AN ACCOUNT?</span> <a id="registerContactBtn">📞 CONTACT US</a></div>
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="infoText" class="info-text"></div>
     </div>
-    <div class="input-group"><input type="email" id="email" placeholder="EMAIL"></div>
-    <div class="input-group"><input type="password" id="password" placeholder="PASSWORD"></div>
-    <button class="login-btn" id="loginBtn">⟳ LOGIN</button>
-    <div class="register-link"><span id="registerText">DON'T HAVE AN ACCOUNT?</span> <a id="contactBtn">📞 CONTACT</a></div>
-    <div id="errorMsg" class="error-msg"></div>
-    <div id="infoText" class="info-text"></div>
 </div>
+
 <script src="config.js"></script>
+
 <script type="importmap">
-{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js","firebase/auth":"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js","firebase/firestore":"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"}}
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+        }
+    }
 </script>
+
 <script type="module">
-import{initializeApp}from"firebase/app";import{getAuth,signInWithEmailAndPassword,setPersistence,browserLocalPersistence,browserSessionPersistence}from"firebase/auth";import{getFirestore,doc,getDoc,setDoc}from"firebase/firestore";const app=initializeApp(window.FIREBASE_CONFIG);const auth=getAuth(app);const db=getFirestore(app);const t={en:{login:"⟳ LOGIN",contact:"📞 CONTACT",reg:"DON'T HAVE AN ACCOUNT?",errReq:"Enter email & password!",errInv:"Invalid credentials!",errBan:"⛧ ACCOUNT BANNED!",success:"✅ Success! Redirecting...",loading:"⟳ Logging in..."},ar:{login:"⟳ تسجيل الدخول",contact:"📞 اتصل بنا",reg:"ليس لديك حساب؟",errReq:"الرجاء إدخال البريد وكلمة المرور!",errInv:"بيانات غير صحيحة!",errBan:"⛧ تم حظر حسابك!",success:"✅ تم التسجيل! جاري التحويل...",loading:"⟳ جاري التسجيل..."}};let lang=localStorage.getItem('lang')||'en';function apply(){const L=t[lang];document.getElementById('loginBtn').innerHTML=L.login;document.getElementById('registerText').innerHTML=L.reg;document.getElementById('contactBtn').innerHTML=L.contact;document.querySelectorAll('.lang-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.lang===lang));document.body.dir=lang==='ar'?'rtl':'ltr'}document.querySelectorAll('.lang-btn').forEach(btn=>{btn.onclick=()=>{lang=btn.dataset.lang;localStorage.setItem('lang',lang);apply()}});document.getElementById('contactBtn').onclick=()=>window.open('https://t.me/kodlamaogrencom','_blank');document.getElementById('loginBtn').onclick=async()=>{const email=document.getElementById('email').value.trim();const pwd=document.getElementById('password').value.trim();const err=document.getElementById('errorMsg');const info=document.getElementById('infoText');const L=t[lang];if(!email||!pwd){err.innerText=L.errReq;return}err.innerText='';info.innerText=L.loading;document.getElementById('loginBtn').disabled=true;try{await setPersistence(auth,browserLocalPersistence);const cred=await signInWithEmailAndPassword(auth,email,pwd);const user=cred.user;const userDoc=await getDoc(doc(db,"users",user.uid));let role='user';if(userDoc.exists()){if(userDoc.data().banned===true){err.innerText=L.errBan;info.innerText='';document.getElementById('loginBtn').disabled=false;return}role=userDoc.data().role||'user'}else{await setDoc(doc(db,"users",user.uid),{email:email,role:'user',createdAt:new Date().toISOString(),banned:false})}sessionStorage.setItem('user',JSON.stringify({uid:user.uid,email:user.email,role:role}));info.innerText=L.success;setTimeout(()=>{window.location.href=role==='superadmin'?'superadmin.html':'admin.html'},1000)}catch(e){err.innerText=L.errInv;info.innerText='';document.getElementById('loginBtn').disabled=false}};apply();
+    import { initializeApp } from "firebase/app";
+    import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
+    import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+
+    const firebaseConfig = window.FIREBASE_CONFIG;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const translations = {
+        en: {
+            emailPlaceholder: "EMAIL", passwordPlaceholder: "PASSWORD", rememberLabel: "Remember Me",
+            loginBtn: "⟳ LOGIN", registerText: "DON'T HAVE AN ACCOUNT?", contactText: "📞 CONTACT US",
+            errorRequired: "Please enter email and password!", errorInvalid: "Invalid email or password!",
+            errorBanned: "YOUR ACCOUNT HAS BEEN BANNED!", loginSuccess: "✅ Login successful! Redirecting...",
+            loggingIn: "⟳ Logging in..."
+        },
+        ar: {
+            emailPlaceholder: "البريد الإلكتروني", passwordPlaceholder: "كلمة المرور", rememberLabel: "تذكرني",
+            loginBtn: "⟳ تسجيل الدخول", registerText: "ليس لديك حساب؟", contactText: "📞 اتصل بنا",
+            errorRequired: "الرجاء إدخال البريد الإلكتروني وكلمة المرور!", errorInvalid: "البريد الإلكتروني أو كلمة المرور غير صحيحة!",
+            errorBanned: "⛧ تم حظر حسابك!", loginSuccess: "✅ تم تسجيل الدخول بنجاح! جاري التحويل...",
+            loggingIn: "⟳ جاري تسجيل الدخول..."
+        }
+    };
+
+    let currentLang = localStorage.getItem('app_language') || 'en';
+
+    function applyLanguage() {
+        const t = translations[currentLang];
+        document.getElementById('email').placeholder = t.emailPlaceholder;
+        document.getElementById('password').placeholder = t.passwordPlaceholder;
+        document.getElementById('rememberLabel').innerText = t.rememberLabel;
+        document.getElementById('loginBtn').innerHTML = t.loginBtn;
+        document.getElementById('registerText').innerHTML = t.registerText;
+        document.getElementById('registerContactBtn').innerHTML = t.contactText;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === currentLang);
+        });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentLang = btn.dataset.lang;
+            localStorage.setItem('app_language', currentLang);
+            applyLanguage();
+        });
+    });
+
+    document.getElementById('registerContactBtn').addEventListener('click', () => {
+        window.open('https://t.me/kodlamaogrencom', '_blank');
+    });
+
+    const savedUser = localStorage.getItem('savedUser');
+    if (savedUser) {
+        try {
+            const userData = JSON.parse(savedUser);
+            document.getElementById('email').value = userData.email;
+            document.getElementById('password').value = userData.password;
+            document.getElementById('rememberMe').checked = true;
+        } catch(e) {}
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const rememberMe = document.getElementById('rememberMe').checked;
+        const errorMsg = document.getElementById('errorMsg');
+        const infoText = document.getElementById('infoText');
+        const t = translations[currentLang];
+        
+        if (!email || !password) {
+            errorMsg.innerText = t.errorRequired;
+            return;
+        }
+        
+        errorMsg.innerText = '';
+        infoText.innerText = t.loggingIn;
+        document.getElementById('loginBtn').disabled = true;
+        
+        try {
+            await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+            
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            let role = 'user';
+            
+            if (userDoc.exists()) {
+                if (userDoc.data().banned === true) {
+                    errorMsg.innerText = t.errorBanned;
+                    infoText.innerText = '';
+                    document.getElementById('loginBtn').disabled = false;
+                    return;
+                }
+                role = userDoc.data().role || 'user';
+            } else {
+                await setDoc(doc(db, "users", user.uid), {
+                    email: email, role: 'user', createdAt: new Date().toISOString(), banned: false
+                });
+            }
+            
+            if (rememberMe) {
+                localStorage.setItem('savedUser', JSON.stringify({ email: email, password: password }));
+            } else {
+                localStorage.removeItem('savedUser');
+            }
+            
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                uid: user.uid, email: user.email, role: role, language: currentLang
+            }));
+            
+            infoText.innerText = t.loginSuccess;
+            
+            setTimeout(() => {
+                window.location.href = role === 'superadmin' ? 'superadmin.html' : 'admin.html';
+            }, 1000);
+            
+        } catch(err) {
+            errorMsg.innerText = t.errorInvalid;
+            infoText.innerText = '';
+            document.getElementById('loginBtn').disabled = false;
+        }
+    });
+
+    applyLanguage();
 </script>
 </body>
 </html>
