@@ -1,0 +1,32 @@
+RewriteEngine On
+RewriteBase /
+
+# Index dosyası
+DirectoryIndex index.html
+
+# Tüm istekleri index.html'e yönlendir
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L,QSA]
+
+# PHP uzantılarını çalıştır
+AddType application/x-httpd-php .php
+
+# 404 hatasını index.html'e yönlendir
+ErrorDocument 404 /index.html
+
+# Dosya erişimlerini engelle
+<FilesMatch "^(config\.js|\.htaccess|robots\.txt)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# XSS ve Clickjacking koruması
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Content-Type-Options "nosniff"
+Header set Referrer-Policy "no-referrer"
+
+# PHP hata gösterimini kapat
+php_flag display_errors off
+php_flag log_errors on
