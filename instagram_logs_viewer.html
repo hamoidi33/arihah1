@@ -14,7 +14,6 @@
             color: #ccc;
         }
         .container { max-width: 800px; margin: 0 auto; }
-        
         .header {
             background: #0f111a;
             border: 2px solid #ff3366;
@@ -26,7 +25,6 @@
         .header h1 { color: #ff3366; font-size: 1.5rem; text-shadow: 0 0 10px #ff3366; letter-spacing: 2px; }
         .header h1 span { color: #00ff41; }
         .header p { color: #888; font-size: 0.7rem; margin-top: 8px; }
-        
         .stats-box {
             background: #0f111a;
             border: 1px solid #2a2e44;
@@ -41,7 +39,6 @@
         .stat-item { text-align: center; }
         .stat-item .number { color: #00ff41; font-size: 1.8rem; font-weight: bold; }
         .stat-item .label { color: #888; font-size: 0.6rem; letter-spacing: 1px; }
-        
         .card {
             background: #0f111a;
             border: 1px solid #2a2e44;
@@ -70,11 +67,9 @@
             color: #aaa;
         }
         .detail-row .value { color: #fff; font-weight: bold; word-break: break-all; }
-        
         .loading { text-align: center; color: #00ff41; padding: 40px; font-size: 0.9rem; }
         .no-data { text-align: center; color: #ff3366; padding: 40px; font-size: 0.9rem; }
         .error-msg { text-align: center; color: #ff0040; padding: 40px; font-size: 0.9rem; }
-        
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
         .btn {
             background: transparent;
@@ -90,7 +85,6 @@
         .btn:hover { background: #00ff41; color: #000; }
         .btn-danger { border-color: #ff3366; color: #ff3366; }
         .btn-danger:hover { background: #ff3366; color: #fff; }
-
         @media (max-width: 500px) {
             .header h1 { font-size: 1.1rem; }
             .card { padding: 12px; }
@@ -130,18 +124,9 @@
         </div>
     </div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
-            }
-        }
-    </script>
-
     <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, orderBy } from "firebase/firestore";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBSy4oCPNTB1h9l2M1P3rkcvwiDrhu82Ao",
